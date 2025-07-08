@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheFork Festival: AI Bot Project Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Earthy Mint
+    Application Structure Plan: A tabbed, dashboard-like single-page application. This structure allows non-linear exploration, enabling stakeholders to jump to the section most relevant to them (e.g., 'Outcomes'). The main sections are: 1. Overview (Objective & Tech), 2. How It Works (Interactive Workflow Diagram), 3. Outcomes (Interactive Chart & Scenario Simulator), 4. Next Steps. This is more engaging and user-friendly than a linear document, facilitating better understanding of the project's value and mechanics.
+    Visualization & Content Choices: 
+    - Objective: Inform -> Text blocks with icons (HTML/CSS) for clarity.
+    - Tech Stack: Inform -> Grid layout with icons (HTML/CSS) for scannability.
+    - Workflow: Explain Process -> Interactive flowchart (HTML/CSS) with hover effects to show details without clutter.
+    - Outcomes Analysis: Compare -> Doughnut Chart (Chart.js/Canvas) for a quick quantitative summary of lead distribution.
+    - Scenario Details: Showcase -> An interactive simulator with buttons (JS) to display different WhatsApp chat mockups and Google Sheet status changes (HTML/CSS tables). This provides a tangible, visual demonstration of each outcome.
+    - Next Steps: Inform -> A clean list layout.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. 
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .tab-active {
+            border-bottom-color: #00a680;
+            color: #00a680;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #4b5563;
+        }
+        .flow-step:hover .flow-icon {
+            transform: scale(1.1);
+            background-color: #00a680;
+        }
+        .flow-step:hover .flow-title {
+            color: #00a680;
+        }
+        .scenario-btn-active {
+            background-color: #00a680;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .chat-bubble-bot {
+            background-color: #e2f7cb;
+            align-self: flex-end;
+            border-radius: 12px 12px 0 12px;
+        }
+        .chat-bubble-user {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-radius: 12px 12px 12px 0;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">TheFork Festival</h1>
+            <p class="text-xl text-gray-600 mt-2">AI-Powered WhatsApp Outreach Project</p>
+        </header>
+
+        <main class="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
+            <!-- Navigation Tabs -->
+            <nav class="border-b border-gray-200 mb-6">
+                <ul class="flex flex-wrap -mb-px text-center text-sm font-medium">
+                    <li class="mr-2">
+                        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="overview">Overview</button>
+                    </li>
+                    <li class="mr-2">
+                        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="workflow">How It Works</button>
+                    </li>
+                    <li class="mr-2">
+                        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="outcomes">Outcomes</button>
+                    </li>
+                    <li>
+                        <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="next-steps">Next Steps</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Content Panes -->
+            <div>
+                <!-- Overview Tab -->
+                <section id="overview" class="tab-content animate-fade-in">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">Project Objective</h2>
+                    <p class="text-gray-600 leading-relaxed mb-8">This project showcases a generative AI bot designed to automate the outreach and qualification process for TheFork Festival. The primary goal is to increase the efficiency of our sales team by allowing the bot to handle initial contact, answer common questions, and intelligently filter leads, freeing up Account Managers to focus on high-value conversations and relationship building.</p>
+
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">The No-Cost Prototype Stack</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6">We have successfully built this working prototype using a stack of robust and free-tier services, proving the concept without financial investment.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+                        <div class="p-4 bg-gray-50 rounded-lg"><span class="text-3xl">💬</span><p class="mt-2 font-semibold">WhatsApp</p><p class="text-xs text-gray-500">Channel</p></div>
+                        <div class="p-4 bg-gray-50 rounded-lg"><span class="text-3xl">🧠</span><p class="mt-2 font-semibold">Dialogflow</p><p class="text-xs text-gray-500">Bot Brain</p></div>
+                        <div class="p-4 bg-gray-50 rounded-lg"><span class="text-3xl">⚙️</span><p class="mt-2 font-semibold">Cloud Functions</p><p class="text-xs text-gray-500">Backend</p></div>
+                        <div class="p-4 bg-gray-50 rounded-lg"><span class="text-3xl">📋</span><p class="mt-2 font-semibold">Google Sheets</p><p class="text-xs text-gray-500">Database</p></div>
+                        <div class="p-4 bg-gray-50 rounded-lg"><span class="text-3xl">📚</span><p class="mt-2 font-semibold">Google Docs</p><p class="text-xs text-gray-500">Knowledge</p></div>
+                    </div>
+                </section>
+
+                <!-- How It Works Tab -->
+                <section id="workflow" class="tab-content hidden animate-fade-in">
+                    <h2 class="text-2xl font-semibold mb-2 text-gray-700">The Ideal Workflow</h2>
+                    <p class="text-gray-600 leading-relaxed mb-8 text-center max-w-2xl mx-auto">This automated workflow shifts the team from manual cold calling to a scalable, bot-first outreach model. Hover over each step to see more details.</p>
+                    <div class="grid md:grid-cols-3 gap-8 items-start relative">
+                        <!-- Step 1 -->
+                        <div class="flow-step text-center cursor-pointer">
+                            <div class="flow-icon flex items-center justify-center w-20 h-20 mx-auto bg-gray-200 rounded-full text-3xl transition-all duration-300">🚀</div>
+                            <h3 class="flow-title text-lg font-semibold mt-4 transition-colors duration-300">1. Proactive Outreach</h3>
+                            <p class="text-sm text-gray-500 mt-2">A script reads the target list from Google Sheets and sends a personalized, pre-approved WhatsApp message to each restaurant.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="flow-step text-center cursor-pointer">
+                           <div class="flow-icon flex items-center justify-center w-20 h-20 mx-auto bg-gray-200 rounded-full text-3xl transition-all duration-300">🤖</div>
+                            <h3 class="flow-title text-lg font-semibold mt-4 transition-colors duration-300">2. Intelligent Handling</h3>
+                            <p class="text-sm text-gray-500 mt-2">The bot uses its Knowledge Base to answer questions and understand the restaurant's intent (interest, objection, or rejection).</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="flow-step text-center cursor-pointer">
+                           <div class="flow-icon flex items-center justify-center w-20 h-20 mx-auto bg-gray-200 rounded-full text-3xl transition-all duration-300">📊</div>
+                            <h3 class="flow-title text-lg font-semibold mt-4 transition-colors duration-300">3. Automated Classification</h3>
+                            <p class="text-sm text-gray-500 mt-2">The bot categorizes every conversation into a final outcome and updates the Google Sheet in real-time for the sales team.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Outcomes Tab -->
+                <section id="outcomes" class="tab-content hidden animate-fade-in">
+                    <div class="grid lg:grid-cols-5 gap-8">
+                        <div class="lg:col-span-2">
+                            <h2 class="text-2xl font-semibold mb-2 text-gray-700">Lead Outcomes</h2>
+                            <p class="text-gray-600 leading-relaxed mb-4">The bot classifies every lead into a clear outcome, providing an instantly actionable list. This chart shows a hypothetical distribution of results from a campaign.</p>
+                            <div class="chart-container relative h-80 w-full max-w-xs mx-auto">
+                                <canvas id="outcomesChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Scenario Simulator</h2>
+                            <p class="text-gray-600 leading-relaxed mb-6">Click a scenario below to see how the bot handles the conversation and how the data is updated in the Google Sheet.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <button class="scenario-btn p-2 px-4 rounded-full text-sm font-medium transition-all duration-200 scenario-btn-active" data-scenario="star">🌟 Self-Service Star</button>
+                                <button class="scenario-btn p-2 px-4 rounded-full text-sm font-medium transition-all duration-200" data-scenario="lead">🤝 Qualified Lead</button>
+                                <button class="scenario-btn p-2 px-4 rounded-full text-sm font-medium transition-all duration-200" data-scenario="disqualified">⛔ Polite Disqualification</button>
+                            </div>
+                            
+                            <div id="scenario-display" class="bg-gray-50 p-4 rounded-lg">
+                                <!-- Dynamic content will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Next Steps Tab -->
+                <section id="next-steps" class="tab-content hidden animate-fade-in">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">Future Roadmap</h2>
+                    <p class="text-gray-600 leading-relaxed mb-8">This successful prototype demonstrates the viability of this approach. The recommended next steps are:</p>
+                    <ul class="space-y-6">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-full mr-4 font-bold text-lg">1</div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Internal Pilot</h3>
+                                <p class="text-gray-600">Test the bot with a small, controlled group of restaurants to gather real-world data and measure performance metrics against manual outreach.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-full mr-4 font-bold text-lg">2</div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Refine Knowledge Base</h3>
+                                <p class="text-gray-600">Continuously add new questions, answers, and objection-handling tactics to the Google Doc as we learn from real interactions, making the bot smarter over time.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-full mr-4 font-bold text-lg">3</div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Explore Full CRM Integration</h3>
+                                <p class="text-gray-600">Plan the migration from Google Sheets to a full Salesforce integration to automatically create tasks and manage leads directly within the CRM for maximum sales team efficiency.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>&copy; 2025 TheFork. AI Bot Project Showcase.</p>
+        </footer>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Data ---
+    const scenarios = {
+        star: {
+            title: '🌟 Self-Service Star',
+            description: 'The restaurant shows clear interest, the bot answers their questions, and they decide to sign up on the spot.',
+            result: 'A successful conversion with zero human effort required.',
+            sheetStatus: 'Responded',
+            sheetOutcome: 'Self-service star',
+            chat: [
+                { from: 'bot', text: 'Hi Trattoria Bella! Interested in our 8-week Festival to boost bookings with a 50% food discount?' },
+                { from: 'user', text: 'Ok maybe. Does the discount apply to drinks?' },
+                { from: 'bot', text: 'Great question! The discount applies only to food, so you maintain your full margins on beverages.' },
+                { from: 'user', text: 'Perfect. Ok, I want to join.' },
+                { from: 'bot', text: 'Excellent! Please click here to complete your registration: [link to form]' },
+            ]
+        },
+        lead: {
+            title: '🤝 Qualified Lead',
+            description: 'The restaurant is interested but has a complex question that requires a human touch.',
+            result: 'A warm, pre-qualified lead is passed to the Account Manager with full context.',
+            sheetStatus: 'Responded',
+            sheetOutcome: 'Qualified lead',
+            chat: [
+                { from: 'bot', text: 'Hi Pizzeria Bueno! We\'re inviting you to TheFork Festival.' },
+                { from: 'user', text: 'We participated two years ago and it was chaos. How is it different now?' },
+                { from: 'bot', text: 'That\'s a very important point. I\'ve flagged this for your Account Manager. They can discuss the new control features and will review our chat before getting in touch here shortly.' },
+            ]
+        },
+        disqualified: {
+            title: '⛔ Polite Disqualification',
+            description: 'The restaurant asks a few questions but ultimately decides not to participate at this time.',
+            result: 'The lead is automatically removed from the calling list, saving the sales team time.',
+            sheetStatus: 'Responded',
+            sheetOutcome: 'Polite Disqualification',
+            chat: [
+                { from: 'bot', text: 'Hi Sushi Central! Interested in joining TheFork Festival?' },
+                { from: 'user', text: 'Hi. What are the benefits?' },
+                { from: 'bot', text: 'You get a big increase in new customers, much higher visibility on our app, and can fill tables during quieter times.' },
+                { from: 'user', text: 'I see. Thank you for the info, but I think we will pass this time.' },
+                { from: 'bot', text: 'No problem at all, thank you for your time. We wish you a successful season!' },
+            ]
+        }
+    };
+
+    // --- Tab Navigation ---
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.dataset.tab;
+            
+            tabButtons.forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            button.classList.add('tab-active');
+            button.classList.remove('tab-inactive');
+
+            tabContents.forEach(content => {
+                if (content.id === tab) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // --- Outcomes Chart ---
+    const ctx = document.getElementById('outcomesChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Self-Service Star', 'Qualified Lead', 'Polite Disqualification'],
+                datasets: [{
+                    label: 'Lead Outcomes',
+                    data: [20, 35, 45],
+                    backgroundColor: ['#00a680', '#5eead4', '#9ca3af'],
+                    borderColor: '#ffffff',
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+    }
+    
+    // --- Scenario Simulator ---
+    const scenarioButtons = document.querySelectorAll('.scenario-btn');
+    const scenarioDisplay = document.getElementById('scenario-display');
+
+    function renderScenario(scenarioKey) {
+        const scenario = scenarios[scenarioKey];
+        if (!scenario) return;
+
+        const chatHtml = scenario.chat.map(msg => `
+            <div class="p-3 my-2 max-w-[80%] text-sm ${msg.from === 'bot' ? 'chat-bubble-bot' : 'chat-bubble-user'}">
+                ${msg.text}
+            </div>
+        `).join('');
+
+        scenarioDisplay.innerHTML = `
+            <h3 class="font-bold text-lg mb-1">${scenario.title}</h3>
+            <p class="text-sm text-gray-600 mb-4">${scenario.description}</p>
+            
+            <div class="mb-4">
+                <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Simulated Chat</p>
+                <div class="bg-gray-200 p-3 rounded-lg flex flex-col">${chatHtml}</div>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Result in Google Sheet</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-200 text-gray-600">
+                            <tr>
+                                <th class="p-2">Status</th>
+                                <th class="p-2">Outcome</th>
+                                <th class="p-2">Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <td class="p-2"><span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">${scenario.sheetStatus}</span></td>
+                                <td class="p-2 font-medium">${scenario.sheetOutcome}</td>
+                                <td class="p-2 text-gray-600">${scenario.result}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    scenarioButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            scenarioButtons.forEach(btn => btn.classList.remove('scenario-btn-active'));
+            button.classList.add('scenario-btn-active');
+            renderScenario(button.dataset.scenario);
+        });
+    });
+
+    // Initial render
+    renderScenario('star');
+});
+</script>
+
+</body>
+</html>
